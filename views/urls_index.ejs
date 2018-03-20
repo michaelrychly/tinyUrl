@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title><%- include ./partials/_header.ejs %></title>
+  <title></title>
+  <style>
+    th {text-align: left;}
+  </style>
 </head>
 <body>
-    <% for(var url in urls) { %>
-    <li><%= JSON.stringify(urls[url]) + " Shortened: " + JSON.stringify(url) %>
-      <a href="<%= JSON.stringify(url) %>" >click here to shorten the URL</a>
-    </li>
-    <% }; %>
+    <%- include ./partials/_header.ejs %>
+    <table style="width:50%">
+      <% for(var url in urls) { %>
+      <tr>
+        <th><a href="<%= JSON.stringify(url) %>"><%= "//http:localhost:8080/" + url %></a></th>
+        <th><%= "(" + urls[url] + ")" %></th>
+        <th><button type="button">Edit</button>
+            <button type="button">Delete</button></th>
+      </tr>
+      <% }; %>
+    </table>
 </body>
 </html>

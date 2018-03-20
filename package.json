@@ -1,0 +1,26 @@
+{
+  "name": "express",
+  "version": "1.0.0",
+  "description": "",
+  "main": "express_server.js",
+  "dependencies": {
+    "ejs": "^2.5.7"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.2"
+  },
+  "scripts": {
+    "start": "node ./bin/www",
+    "devstart": "nodemon ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelrychly/express.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/michaelrychly/express/issues"
+  },
+  "homepage": "https://github.com/michaelrychly/express#readme"
+}

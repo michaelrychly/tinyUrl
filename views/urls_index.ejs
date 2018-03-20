@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title><%- include ./partials/_header.ejs %></title>
+</head>
+<body>
+    <% for(var url in urls) { %>
+    <li><%= JSON.stringify(urls[url]) + " Shortened: " + JSON.stringify(url) %>
+      <a href="<%= JSON.stringify(url) %>" >click here to shorten the URL</a>
+    </li>
+    <% }; %>
+</body>
+</html>

@@ -12,6 +12,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
+//databases for url and users
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -36,7 +37,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  //saving the reuired variables
+  //saving the required variables
   let templateVars = {
     urls: urlDatabase,
     user: users[req.cookies["user_id"]]
@@ -59,7 +60,7 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  //saving the reuired variables
+  //saving the required variables
   let templateVars = {
     shortURL: req.params.id,
     urls: urlDatabase,

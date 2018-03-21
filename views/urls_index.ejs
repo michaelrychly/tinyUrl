@@ -19,7 +19,7 @@
         <th><a href="<%= urls[url] %>"><%= urls[url] %></a></th>
         <!-- edit link leading to short url details -->
         <th><a href="<%= "/urls/" + url %>">Edit</a></th>
-        <!-- delete button that will remove the particular url -->
+        <!-- Delete button that will remove the particular url -->
         <th>
           <form method="POST" action="<%= "/urls/" + url + "/delete" %>">
             <input type="submit" value="Delete">

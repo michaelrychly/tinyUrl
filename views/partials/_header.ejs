@@ -1,1 +1,21 @@
-TinyApp
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title></title>
+</head>
+<body>
+  <% if (!username) { %>
+    <form action="/login" method="POST" style="margin:150px;">
+      <label for="header">Enter a user name:</label>
+      <input id="username" type="text" name="username" style="width:  300px">
+      <input type="submit" value="Login">
+      <label for="username"><%= username %></label>
+    </form>
+  <% } else { %>
+    <form action= "/logout" method="POST" style="margin:150px;">
+      <label for="username"><%= username %></label>
+      <input type="submit" value="Logout">
+    </form>
+  <% } %>
+</body>
+</html>

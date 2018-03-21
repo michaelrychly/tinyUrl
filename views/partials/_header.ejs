@@ -1,17 +1,21 @@
+<!-- header included in every other page holding login and logout functionality -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <title></title>
 </head>
 <body>
+  <!-- if the app does not have a username saved in cookie -->
   <% if (!username) { %>
+    <!-- show label, input field and login button -->
     <form action="/login" method="POST" style="margin:150px;">
       <label for="header">Enter a user name:</label>
       <input id="username" type="text" name="username" style="width:  300px">
       <input type="submit" value="Login">
-      <label for="username"><%= username %></label>
     </form>
+  <!-- if the app has a username in cookie -->
   <% } else { %>
+    <!-- show username and logout button -->
     <form action= "/logout" method="POST" style="margin:150px;">
       <label for="username"><%= username %></label>
       <input type="submit" value="Logout">

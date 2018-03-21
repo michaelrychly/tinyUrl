@@ -13,7 +13,7 @@ var urlDatabase = {
 };
 
 app.get("/", (req, res) => {
-  res.end("Hello!");
+  res.render("Hello!");
 });
 
 app.get("/urls/new", (req, res) => {

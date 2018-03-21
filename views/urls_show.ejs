@@ -2,10 +2,23 @@
 <html lang="en">
 <head>
   <title></title>
+  <style>
+    th {text-align: left;}
+  </style>
 </head>
 <body>
     <%- include ./partials/_header.ejs %>
-    <p><%= shortURL %></p>
-    <p><%= urls[shortURL] %></p>
+    <p><%= "ShortURL: " + shortURL %></p>
+    <table style="width:35%">
+      <tr>
+        <th>
+          <form method="POST" action="<%= "/urls/" + shortURL %>">
+            <label for="longURL">Enter a URL:</label>
+            <input id="longURL" type="text" name="longURL" placeholder="      <%= urls[shortURL] %>" style="width: 300px">
+            <input type="submit" value="Update">
+          </form>
+        </th>
+      </tr>
+    </table>
 </body>
 </html>

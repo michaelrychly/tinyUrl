@@ -8,13 +8,17 @@
 </head>
 <body>
     <%- include ./partials/_header.ejs %>
-    <table style="width:50%">
+    <table style="width:30%">
       <% for(var url in urls) { %>
       <tr>
-        <th><a href="<%= JSON.stringify(url) %>"><%= "//http:localhost:8080/" + url %></a></th>
-        <th><%= "(" + urls[url] + ")" %></th>
-        <th><button type="button">Edit</button>
-            <button type="button">Delete</button></th>
+        <th><%= url + " -> " %></th>
+        <th><a href="<%= urls[url] %>"><%= urls[url] %></a></th>
+        <th><a href="<%= "/urls/" + url %>">Edit</a></th>
+        <th>
+          <form method="POST" action="<%= "/urls/" + url + "/delete" %>">
+            <input type="submit" value="Delete">
+          </form>
+        </th>
       </tr>
       <% }; %>
     </table>

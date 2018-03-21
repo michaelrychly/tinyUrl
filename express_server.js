@@ -17,6 +17,19 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
+
 //http get methods
 app.get("/", (req, res) => {
   res.render("Hello!");
@@ -26,7 +39,8 @@ app.get("/urls/new", (req, res) => {
   //saving the reuired variables
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    user: users[req.cookies["user_id"]]
   };
   res.render("urls_new", templateVars);
 });
@@ -50,7 +64,8 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     urls: urlDatabase,
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    user: users[req.cookies["user_id"]]
   };
 
   //redirect to the short url details
@@ -58,6 +73,18 @@ app.get("/urls/:id", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  //saving the required variables
+  let templateVars = {
+    urls: urlDatabase,
+    username: req.cookies["username"],
+    user: users[req.cookies["user_id"]]
+  };
+
+  //redirect to the url overview list
+  res.render("urls_index", templateVars);
+});
+
+app.get("/register", (req, res) => {
   //saving the reuired variables
   let templateVars = {
     urls: urlDatabase,
@@ -65,7 +92,7 @@ app.get("/urls", (req, res) => {
   };
 
   //redirect to the url overview list
-  res.render("urls_index", templateVars);
+  res.render("urls_email", templateVars);
 });
 
 app.get("/urls.json", (req, res) => {
@@ -126,6 +153,35 @@ app.post("/logout", (req, res) => {
 
   //redirect to the url overview list
   res.redirect(301, '/urls');
+});
+
+app.post("/register", (req, res) => {
+  //handle errors
+  if (!req.body.email){
+    //redirect to the url overview list
+    res.status(400).send('E-mail has not been provided!');
+  } else if(!req.body.password){
+    res.status(400).send('Password has not been provided!');
+  } else {
+    for (let email in users){
+      if (req.body.email === users[email].email)
+      {
+        res.status(400).send(`E-mail ${req.body.email} has already been registered!`);
+      }
+    }
+
+    //create the cookie user_id and save the provided username
+    let userID = generateRandomString();
+    let user = {
+      id: userID,
+      email: req.body.email,
+      password: req.body.password}
+
+    users[userID] = user;
+    res.cookie('user_id', userID);
+    //redirect to the url overview list
+    res.redirect(301, '/urls');
+  }
 });
 
 //http listener

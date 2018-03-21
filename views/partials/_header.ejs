@@ -5,8 +5,17 @@
   <title></title>
 </head>
 <body>
-  <!-- links to login and register -->
-  <a href="/login">Login</a>
-  <a href="/register">Register</a>
+  <!-- if the user has not logged in -->
+  <% if (!user) { %>
+    <!-- links to login and register -->
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+  <!-- if the user has logged in -->
+  <% } else { %>
+    <form action= "/logout" method="POST" style="margin:150px;">
+      <label for="user_id"><%= user.id %></label>
+      <input type="submit" value="Logout">
+    </form>
+  <% } %>
 </body>
 </html>

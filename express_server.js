@@ -12,12 +12,12 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 
-var urlDatabase = {
+let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
-const users = {
+let users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
@@ -39,7 +39,6 @@ app.get("/urls/new", (req, res) => {
   //saving the reuired variables
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"],
     user: users[req.cookies["user_id"]]
   };
   res.render("urls_new", templateVars);
@@ -64,7 +63,6 @@ app.get("/urls/:id", (req, res) => {
   let templateVars = {
     shortURL: req.params.id,
     urls: urlDatabase,
-    username: req.cookies["username"],
     user: users[req.cookies["user_id"]]
   };
 
@@ -76,7 +74,6 @@ app.get("/urls", (req, res) => {
   //saving the required variables
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"],
     user: users[req.cookies["user_id"]]
   };
 
@@ -93,7 +90,6 @@ app.get("/login", (req, res) => {
   //saving the required variables
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"],
     user: users[req.cookies["user_id"]]
   };
 
@@ -155,24 +151,28 @@ app.post("/login", (req, res) => {
   } else {
     //loop through users
     for (let user in users){
+      //does the user exist in users
       if (req.body.email === users[user].email)
       {
+        //is the password correct
         if (req.body.password === users[user].password){
+          //save the id in the cookie
           res.cookie('user_id', users[user].id);
+          //redirect to the welcome page
           res.redirect(301, '/');
         } else{
           res.status(403).send("The password does not match!");
         }
-      } else {
-        res.status(403).send(`E-mail ${req.body.email} has not been registered!`);
       }
     }
+    //reaching this point means the e-mail has not been registered
+    res.status(403).send(`E-mail ${req.body.email} has not been registered!`);
   }
 });
 
 app.post("/logout", (req, res) => {
-  //delete the cookie username
-  res.clearCookie('username');
+  //delete the cookie user_id
+  res.clearCookie('user_id');
 
   //redirect to the url overview list
   res.redirect(301, '/urls');
@@ -192,8 +192,7 @@ app.post("/register", (req, res) => {
         res.status(400).send(`E-mail ${req.body.email} has already been registered!`);
       }
     }
-
-    //create the cookie user_id and save the provided username
+    //create the cookie user_id and save the provided user
     let userID = generateRandomString();
     let user = {
       id: userID,

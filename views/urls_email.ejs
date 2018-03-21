@@ -8,7 +8,6 @@
   </style>
 </head>
 <body>
-    <%- include ./partials/_header.ejs %>
     <!-- present table with email and password details -->
     <table style="width:50%">
       <tr>
@@ -16,9 +15,10 @@
           <!-- input forms -->
           <form method="POST" action="/register">
             <label for="email">Enter an E-mail:</label>
-            <!-- input field for updating the long url -->
+            <!-- input field for updating the email -->
             <input id="email" type="email" name="email" placeholder="E-mail" style="width: 200px">
             <label for="password">Enter a password:</label>
+            <!-- input field for updating the password -->
             <input id="password" type="password" name="password" placeholder="Password" style="width: 200px">
             <!-- update button -->
             <input type="submit" value="Update">

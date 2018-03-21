@@ -32,7 +32,7 @@ const users = {
 
 //http get methods
 app.get("/", (req, res) => {
-  res.render("Hello!");
+  res.end("Hello!");
 });
 
 app.get("/urls/new", (req, res) => {
@@ -85,14 +85,20 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  //saving the reuired variables
+  //redirect to the url overview list
+  res.render("urls_email");
+});
+
+app.get("/login", (req, res) => {
+  //saving the required variables
   let templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    username: req.cookies["username"],
+    user: users[req.cookies["user_id"]]
   };
 
   //redirect to the url overview list
-  res.render("urls_email", templateVars);
+  res.render("urls_login", templateVars);
 });
 
 app.get("/urls.json", (req, res) => {
@@ -140,11 +146,28 @@ app.post("/urls/:id", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  //create the cookie username and save the provided username
-  res.cookie('username', req.body.username);
-
-  //redirect to the url overview list
-  res.redirect(301, '/urls');
+  if (!req.body.email){
+    //no email provided
+    res.status(400).send('E-mail has not been provided!');
+  } else if(!req.body.password){
+    //no password provided
+    res.status(400).send('Password has not been provided!');
+  } else {
+    //loop through users
+    for (let user in users){
+      if (req.body.email === users[user].email)
+      {
+        if (req.body.password === users[user].password){
+          res.cookie('user_id', users[user].id);
+          res.redirect(301, '/');
+        } else{
+          res.status(403).send("The password does not match!");
+        }
+      } else {
+        res.status(403).send(`E-mail ${req.body.email} has not been registered!`);
+      }
+    }
+  }
 });
 
 app.post("/logout", (req, res) => {

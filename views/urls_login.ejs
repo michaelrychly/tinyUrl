@@ -1,0 +1,30 @@
+<!-- this page is for login -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title></title>
+  <style>
+    th {text-align: left;}
+  </style>
+</head>
+<body>
+  <!-- present table with email and password details -->
+  <table style="width:50%">
+    <tr>
+      <th>
+        <!-- input forms -->
+        <form method="POST" action="/login">
+          <!-- input field for email -->
+          <label for="email">Enter an E-mail:</label>
+          <input id="email" type="email" name="email"
+          placeholder="E-mail" style="width: 200px">
+          <!-- input field for password -->
+          <label for="password">Enter password:</label>
+          <input id="password" type="psword" name="password" placeholder="Password" stylewidth:"width: 200px" >
+          <!-- update button -->
+          <input type="submit" value="Login" >
+      </th>
+    </tr>
+  </table>
+</body>
+</html>

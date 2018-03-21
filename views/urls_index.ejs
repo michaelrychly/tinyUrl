@@ -1,3 +1,4 @@
+<!-- this page is showing all urls currently saved in the database and provides different options to action on them -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,11 +10,16 @@
 <body>
     <%- include ./partials/_header.ejs %>
     <table style="width:30%">
+      <!-- loop through the urls and return a table with the result -->
       <% for(var url in urls) { %>
       <tr>
+        <!-- the short url -->
         <th><%= url + " -> " %></th>
+        <!-- link of the long url -->
         <th><a href="<%= urls[url] %>"><%= urls[url] %></a></th>
+        <!-- edit link leading to short url details -->
         <th><a href="<%= "/urls/" + url %>">Edit</a></th>
+        <!-- delete button that will remove the particular url -->
         <th>
           <form method="POST" action="<%= "/urls/" + url + "/delete" %>">
             <input type="submit" value="Delete">

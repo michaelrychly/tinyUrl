@@ -14,8 +14,12 @@ app.use(cookieParser());
 
 //databases for url and users
 let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "userRandomID": {
+    "b2xVn2": "http://www.lighthouselabs.ca"
+  },
+  "user2RandomID": {
+    "9sm5xK": "http://www.google.com"
+  }
 };
 
 let users = {
@@ -37,12 +41,17 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  //saving the required variables
-  let templateVars = {
-    urls: urlDatabase,
-    user: users[req.cookies["user_id"]]
-  };
-  res.render("urls_new", templateVars);
+  if (!req.cookies["user_id"]){
+    //redirect to the login page
+    res.redirect(301, "/login");
+  } else {
+    let templateVars = {
+      urls: urlDatabase,
+      user: users[req.cookies["user_id"]]
+    };
+
+    res.render("urls_new", templateVars);
+  }
 });
 
 app.get("/u/:shortURL", (req, res) => {

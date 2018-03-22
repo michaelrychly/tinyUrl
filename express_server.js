@@ -43,11 +43,16 @@ let users = {
 
 //http get methods
 app.get("/", (req, res) => {
-  res.end("Hello!");
+  if (req.session.user_id === ""){
+    //redirect to the login page
+    res.redirect(301, "/login");
+  } else {
+    res.redirect(301, "/urls");
+  }
 });
 
 app.get("/urls/new", (req, res) => {
-  if (req.session.user_id === ""){
+  if (!req.session.user_id){
     //redirect to the login page
     res.redirect(301, "/login");
   } else {
@@ -70,8 +75,13 @@ app.get("/u/:shortURL", (req, res) => {
     }
   }
 
-  //redirect to the long URL
-  res.redirect(301, longURL);
+  //check if the longURL could be found
+  if (longURL !== ""){
+    //redirect to the long URL
+    res.redirect(301, longURL);
+  } else{
+    res.end("<html><body>The shortURL does not exist.</body></html>\n");
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -103,14 +113,20 @@ app.get("/register", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  //saving the required variables
-  let templateVars = {
-    urls: urlDatabase,
-    user: users[req.session.user_id]
-  };
+  console.log(req.session.user_id);
+  if (!req.session.user_id){
+    //saving the required variables
+    let templateVars = {
+      urls: urlDatabase,
+      user: users[req.session.user_id]
+    };
 
-  //redirect to the url overview list
-  res.render("urls_login", templateVars);
+    //redirect to the url overview list
+    res.render("urls_login", templateVars);
+  } else {
+  //redirect to the urls page
+    res.redirect(301, "/urls");
+  }
 });
 
 app.get("/urls.json", (req, res) => {
@@ -125,26 +141,32 @@ app.get("/hello", (req, res) => {
 
 //http post methods
 app.post("/urls", (req, res) => {
-  //add a new url to the database
-  let shortURL = generateRandomString();
+  if (!req.session.user_id){
+    res.end("<html><body>You are not logged in. You are not allowed to update data. </body></html>\n");
+  } else {
+    //add a new url to the database
+    let shortURL = generateRandomString();
+    let url = {
+      userID: req.session.user_id,
+      longURL: req.body.longURL
+    }
 
-  let url = {
-    userID: req.session.user_id,
-    longURL: req.body.longURL
+    urlDatabase[shortURL] = url;
+    //redirect to the urls overview
+    res.redirect(301, '/urls');
   }
-
-  urlDatabase[shortURL] = url;
-  //redirect to the urls overview
-  //this way no update necessary to short url details
-  res.redirect(301, '/urls');
 });
 
 app.post("/urls/:id/delete", (req, res) => {
-  //delete the url from the url database
-  delete urlDatabase[req.params.id];
+  if (!req.session.user_id){
+    res.end("<html><body>You are not logged in. You are not allowed to delete data. </body></html>\n");
+  } else {
+    //delete the url from the url database
+    delete urlDatabase[req.params.id];
 
-  //redirect to the url overview list
-  res.redirect(301, '/urls');
+    //redirect to the url overview list
+    res.redirect(301, '/urls');
+  }
 });
 
 app.post("/urls/:id", (req, res) => {
@@ -217,6 +239,8 @@ app.post("/register", (req, res) => {
 
     users[userID] = user;
     req.session.user_id = userID;
+    console.log("register", users);
+    console.log("userID", userID);
     //redirect to the url overview list
     res.redirect(301, '/urls');
   }

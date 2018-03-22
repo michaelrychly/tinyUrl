@@ -11,6 +11,8 @@
     <%- include ./partials/_header.ejs %>
     <% if (!user) { %>
       <h3>Please log in or register to udpate your urls.</h3>
+    <% } else if (!urls[shortURL]) { %>
+      <h3>The shortURL does not exist. </h3>
     <% } else if (urls[shortURL].userID === user.id) { %>
     <!-- present the short url -->
     <p><%= "ShortURL: " + shortURL %></p>

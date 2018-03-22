@@ -13,7 +13,7 @@
   <!-- if the user is logged in -->
   <% } else { %>
     <form action= "/logout" method="POST" style="margin:150px;">
-      <label for="user_id"><%= user.id %></label>
+      <label for="user_id"><%= user.email %></label>
       <input type="submit" value="Logout">
     </form>
   <% } %>

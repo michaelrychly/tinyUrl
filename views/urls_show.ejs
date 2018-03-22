@@ -10,8 +10,8 @@
 <body>
     <%- include ./partials/_header.ejs %>
     <% if (!user) { %>
-      <h3>Please log in or register to see your urls.</h3>
-    <% } else { %>
+      <h3>Please log in or register to udpate your urls.</h3>
+    <% } else if (urls[shortURL].userID === user.id) { %>
     <!-- present the short url -->
     <p><%= "ShortURL: " + shortURL %></p>
     <!-- present table with url details -->
@@ -29,6 +29,8 @@
         </th>
       </tr>
     </table>
+    <% } else { %>
+      <h3>You can only see the urls that you have registered.</h3>
     <% } %>
 </body>
 </html>

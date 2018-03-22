@@ -2,7 +2,8 @@
 //parameters
 const express = require("express");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
+const bcrypt = require('bcrypt');
 
 var app = express();
 var PORT = process.env.PORT || 8080; // default port 8080
@@ -10,7 +11,10 @@ var PORT = process.env.PORT || 8080; // default port 8080
 //connecting to express
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(cookieParser());
+app.use(cookieSession({
+  name: 'session',
+  keys: ['user_id']
+}))
 
 //databases for url and users
 let urlDatabase = {
@@ -43,16 +47,15 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  if (!req.cookies["user_id"]){
+  if (req.session.user_id === ""){
     //redirect to the login page
     res.redirect(301, "/login");
   } else {
     let templateVars = {
       urls: urlDatabase,
-      user: users[req.cookies["user_id"]]
+      user: users[req.session.user_id]
     };
 
-    console.log(req.cookies["user_id"]);
     res.render("urls_new", templateVars);
   }
 });
@@ -73,20 +76,10 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   //saving the required variables
-  // => fix shortURL, all respective shortURLs?
-  let usersShortURL;
-  for (let url in urlDatabase){
-    for (let shortURL in Object.keys(urlDatabase)){
-      if(url == Object.keys(urlDatabase)[shortURL]){
-        usersShortURL = url;
-      }
-    }
-  }
-
   let templateVars = {
-    shortURL: usersShortURL,
+    shortURL: req.params.id,
     urls: urlDatabase,
-    user: users[req.cookies["user_id"]]
+    user: users[req.session.user_id]
   };
 
   //redirect to the short url details
@@ -96,8 +89,8 @@ app.get("/urls/:id", (req, res) => {
 app.get("/urls", (req, res) => {
   //saving the required variables
   let templateVars = {
-    urls: urlsForUser(req.cookies["user_id"]),
-    user: users[req.cookies["user_id"]]
+    urls: urlsForUser(req.session.user_id),
+    user: users[req.session.user_id]
   };
 
   //redirect to the url overview list
@@ -113,7 +106,7 @@ app.get("/login", (req, res) => {
   //saving the required variables
   let templateVars = {
     urls: urlDatabase,
-    user: users[req.cookies["user_id"]]
+    user: users[req.session.user_id]
   };
 
   //redirect to the url overview list
@@ -136,14 +129,14 @@ app.post("/urls", (req, res) => {
   let shortURL = generateRandomString();
 
   let url = {
-    id: req.cookies["user_id"],
+    userID: req.session.user_id,
     longURL: req.body.longURL
   }
 
   urlDatabase[shortURL] = url;
-
-  //redirect to the short url details
-  res.redirect(301, '/urls/' + shortURL);
+  //redirect to the urls overview
+  //this way no update necessary to short url details
+  res.redirect(301, '/urls');
 });
 
 app.post("/urls/:id/delete", (req, res) => {
@@ -177,24 +170,25 @@ app.post("/login", (req, res) => {
       if (req.body.email === users[user].email)
       {
         //is the password correct
-        if (req.body.password === users[user].password){
+        if (bcrypt.compareSync(req.body.password, users[user].password)){
           //save the id in the cookie
-          res.cookie('user_id', users[user].id);
+          req.session.user_id = users[user].id;
           //redirect to the welcome page
-          res.redirect(301, '/urls/new');
+          //res.redirect(301, '/urls/new');
+          return res.redirect(301, '/');
         } else{
-          res.status(403).send("The password does not match!");
+          return res.status(403).send("The password does not match!");
         }
       }
     }
     //reaching this point means the e-mail has not been registered
-    res.status(403).send(`E-mail ${req.body.email} has not been registered!`);
+    return res.status(403).send(`E-mail ${req.body.email} has not been registered!`);
   }
 });
 
 app.post("/logout", (req, res) => {
   //delete the cookie user_id
-  res.clearCookie('user_id');
+  req.session = null;
 
   //redirect to the url overview list
   res.redirect(301, '/urls');
@@ -211,7 +205,7 @@ app.post("/register", (req, res) => {
     for (let email in users){
       if (req.body.email === users[email].email)
       {
-        res.status(400).send(`E-mail ${req.body.email} has already been registered!`);
+        return res.status(400).send(`E-mail ${req.body.email} has already been registered!`);
       }
     }
     //create the cookie user_id and save the provided user
@@ -219,10 +213,10 @@ app.post("/register", (req, res) => {
     let user = {
       id: userID,
       email: req.body.email,
-      password: req.body.password}
+      password: bcrypt.hashSync(req.body.password, 10)}
 
     users[userID] = user;
-    res.cookie('user_id', userID);
+    req.session.user_id = userID;
     //redirect to the url overview list
     res.redirect(301, '/urls');
   }
@@ -247,6 +241,7 @@ function urlsForUser(id) {
 
   //show only the urls that belong to a user_id
   for (let urls in urlDatabase){
+
     if (id === urlDatabase[urls].userID){
       usersURLs[urls] = urlDatabase[urls];
     }

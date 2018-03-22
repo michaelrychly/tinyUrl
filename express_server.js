@@ -14,11 +14,13 @@ app.use(cookieParser());
 
 //databases for url and users
 let urlDatabase = {
-  "userRandomID": {
-    "b2xVn2": "http://www.lighthouselabs.ca"
+  "b2xVn2": {
+    id: "userRandomID",
+    longURL: "http://www.lighthouselabs.ca"
   },
-  "user2RandomID": {
-    "9sm5xK": "http://www.google.com"
+  "9sm5xK": {
+    id: "user2RandomID",
+    longURL: "http://www.google.com"
   }
 };
 
@@ -50,6 +52,7 @@ app.get("/urls/new", (req, res) => {
       user: users[req.cookies["user_id"]]
     };
 
+    console.log(req.cookies["user_id"]);
     res.render("urls_new", templateVars);
   }
 });
@@ -57,10 +60,10 @@ app.get("/urls/new", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   let longURL = "";
 
-  //search for the url in url database
+  //search for the url in urlurlDa database
   for (let url in urlDatabase){
     if (req.params.shortURL === url){
-      longURL = urlDatabase[url];
+      longURL = urlDatabase[url].longURL;
     }
   }
 
@@ -70,8 +73,19 @@ app.get("/u/:shortURL", (req, res) => {
 
 app.get("/urls/:id", (req, res) => {
   //saving the required variables
+  // => fix shortURL, all respective shortURLs?
+  let usersShortURL;
+  console.log(Object.keys(urlDatabase));
+  for (let url in urlDatabase){
+    for (let shortURL in Object.keys(urlDatabase)){
+      if(url == Object.keys(urlDatabase)[shortURL]){
+        usersShortURL = url;
+      }
+    }
+  }
+
   let templateVars = {
-    shortURL: req.params.id,
+    shortURL: usersShortURL,
     urls: urlDatabase,
     user: users[req.cookies["user_id"]]
   };
@@ -83,7 +97,7 @@ app.get("/urls/:id", (req, res) => {
 app.get("/urls", (req, res) => {
   //saving the required variables
   let templateVars = {
-    urls: urlDatabase,
+    urls: urlsForUser(req.cookies["user_id"]),
     user: users[req.cookies["user_id"]]
   };
 
@@ -119,9 +133,15 @@ app.get("/hello", (req, res) => {
 
 //http post methods
 app.post("/urls", (req, res) => {
+  //add a new url to the database
   let shortURL = generateRandomString();
 
-  urlDatabase[shortURL] = req.body.longURL;
+  let url = {
+    id: req.cookies["user_id"],
+    longURL: req.body.longURL
+  }
+
+  urlDatabase[shortURL] = url;
 
   //redirect to the short url details
   res.redirect(301, '/urls/' + shortURL);
@@ -136,16 +156,8 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
-  //add the url to the url database
-  urlDatabase[req.params.id] = req.body.longURL;
-
-  //redirect to url overview list
-  res.redirect(301, '/urls');
-});
-
-app.post("/urls/:id", (req, res) => {
-  //update the long url for a particular short url
-  urlDatabase[req.params.id] = req.body.longURL;
+  //update the url to the url database
+  urlDatabase[req.params.id].longURL = req.body.longURL;
 
   //redirect to url overview list
   res.redirect(301, '/urls');
@@ -169,7 +181,7 @@ app.post("/login", (req, res) => {
           //save the id in the cookie
           res.cookie('user_id', users[user].id);
           //redirect to the welcome page
-          res.redirect(301, '/');
+          res.redirect(301, '/urls/new');
         } else{
           res.status(403).send("The password does not match!");
         }
@@ -228,4 +240,16 @@ function generateRandomString() {
   //create a random string that has 6 alphanumeric charactars
   for (var i = 6; i > 0; --i) result += chars[Math.floor(Math.random() * chars.length)];
   return result;
+}
+
+function urlsForUser(id) {
+  let usersURLs = {};
+
+  //show only the urls that belong to a user_id
+  for (let urls in urlDatabase){
+    if (id === urlDatabase[urls].id){
+      usersURLs[urls] = urlDatabase[urls];
+    }
+  }
+  return usersURLs;
 }

@@ -19,7 +19,7 @@
           <form method="POST" action="<%= "/urls/" + shortURL %>">
             <label for="longURL">Enter a URL:</label>
             <!-- input field for updating the long url -->
-            <input id="longURL" type="text" name="longURL" placeholder="      <%= urls[shortURL] %>" style="width: 300px">
+            <input id="longURL" type="text" name="longURL" placeholder="<%= urls[shortURL].longURL %>" style="width: 300px">
             <!-- Update button -->
             <input type="submit" value="Update">
           </form>

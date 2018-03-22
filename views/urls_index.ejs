@@ -9,6 +9,9 @@
 </head>
 <body>
     <%- include ./partials/_header.ejs %>
+    <% if (!user) { %>
+      <h3>Please log in or register to see your urls.</h3>
+    <% }%>
     <table style="width:30%">
       <!-- loop through the urls and return a table with the result -->
       <% for(var url in urls) { %>
@@ -16,7 +19,7 @@
         <!-- the short url -->
         <th><%= url + " -> " %></th>
         <!-- link of the long url -->
-        <th><a href="<%= urls[url] %>"><%= urls[url] %></a></th>
+        <th><a href="<%= urls[url].longURL %>"><%= urls[url].longURL %></a></th>
         <!-- edit link leading to short url details -->
         <th><a href="<%= "/urls/" + url %>">Edit</a></th>
         <!-- Delete button that will remove the particular url -->

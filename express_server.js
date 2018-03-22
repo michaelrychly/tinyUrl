@@ -15,11 +15,11 @@ app.use(cookieParser());
 //databases for url and users
 let urlDatabase = {
   "b2xVn2": {
-    id: "userRandomID",
+    userID: "userRandomID",
     longURL: "http://www.lighthouselabs.ca"
   },
   "9sm5xK": {
-    id: "user2RandomID",
+    userID: "user2RandomID",
     longURL: "http://www.google.com"
   }
 };
@@ -60,7 +60,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/u/:shortURL", (req, res) => {
   let longURL = "";
 
-  //search for the url in urlurlDa database
+  //search for the url in urlDadatabase
   for (let url in urlDatabase){
     if (req.params.shortURL === url){
       longURL = urlDatabase[url].longURL;
@@ -75,7 +75,6 @@ app.get("/urls/:id", (req, res) => {
   //saving the required variables
   // => fix shortURL, all respective shortURLs?
   let usersShortURL;
-  console.log(Object.keys(urlDatabase));
   for (let url in urlDatabase){
     for (let shortURL in Object.keys(urlDatabase)){
       if(url == Object.keys(urlDatabase)[shortURL]){
@@ -156,6 +155,7 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 
 app.post("/urls/:id", (req, res) => {
+
   //update the url to the url database
   urlDatabase[req.params.id].longURL = req.body.longURL;
 
@@ -247,7 +247,7 @@ function urlsForUser(id) {
 
   //show only the urls that belong to a user_id
   for (let urls in urlDatabase){
-    if (id === urlDatabase[urls].id){
+    if (id === urlDatabase[urls].userID){
       usersURLs[urls] = urlDatabase[urls];
     }
   }

@@ -9,6 +9,9 @@
 </head>
 <body>
     <%- include ./partials/_header.ejs %>
+    <% if (!user) { %>
+      <h3>Please log in or register to see your urls.</h3>
+    <% } else { %>
     <!-- present the short url -->
     <p><%= "ShortURL: " + shortURL %></p>
     <!-- present table with url details -->
@@ -26,5 +29,6 @@
         </th>
       </tr>
     </table>
+    <% } %>
 </body>
 </html>

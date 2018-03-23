@@ -1,18 +1,19 @@
 {
-  "name": "express",
+  "name": "express-server",
   "version": "1.0.0",
   "description": "",
   "main": "express_server.js",
   "dependencies": {
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.2",
+    "cookie-session": "^2.0.0-beta.3",
     "ejs": "^2.5.7"
   },
   "devDependencies": {
     "nodemon": "^1.17.2"
   },
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "nodemon ./express_server.js",
     "devstart": "nodemon ./express_server.js"
   },
   "repository": {

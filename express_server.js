@@ -43,7 +43,7 @@ let users = {
 
 //http get methods
 app.get("/", (req, res) => {
-  if (req.session.user_id === ""){
+  if (!req.session.user_id){
     //redirect to the login page
     res.redirect(301, "/login");
   } else {
@@ -108,12 +108,16 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  //redirect to the url overview list
-  res.render("urls_email");
+  if (!req.session.user_id){
+    //redirect to the url overview list
+    res.render("urls_email");
+  } else {
+    //redirect to the login page
+    res.redirect(301, "/urls");
+  }
 });
 
 app.get("/login", (req, res) => {
-  console.log(req.session.user_id);
   if (!req.session.user_id){
     //saving the required variables
     let templateVars = {
@@ -239,8 +243,6 @@ app.post("/register", (req, res) => {
 
     users[userID] = user;
     req.session.user_id = userID;
-    console.log("register", users);
-    console.log("userID", userID);
     //redirect to the url overview list
     res.redirect(301, '/urls');
   }

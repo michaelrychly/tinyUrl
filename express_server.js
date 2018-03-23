@@ -32,12 +32,12 @@ let users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur"
+    password: bcrypt.hashSync("purple-monkey-dinosaur", 10)
   },
  "user2RandomID": {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk"
+    password: bcrypt.hashSync("dishwasher-funk", 10)
   }
 }
 
@@ -127,8 +127,14 @@ app.get("/login", (req, res) => {
 
     //redirect to the url overview list
     res.render("urls_login", templateVars);
+  } else if (!findUser(req.session.user_id)){
+    //In case the server restarts all registered users
+    //will be gone. Check if the user is part of users
+    //if not delete the cookie
+    req.session = null;
+    res.redirect(301, "/register");
   } else {
-  //redirect to the urls page
+    //redirect to the urls page
     res.redirect(301, "/urls");
   }
 });
@@ -200,7 +206,6 @@ app.post("/login", (req, res) => {
           //save the id in the cookie
           req.session.user_id = users[user].id;
           //redirect to the welcome page
-          //res.redirect(301, '/urls/new');
           return res.redirect(301, '/');
         } else{
           return res.status(403).send("The password does not match!");
@@ -273,4 +278,12 @@ function urlsForUser(id) {
     }
   }
   return usersURLs;
+}
+
+function findUser(userID) {
+  for (let user in users){
+    if (userID === users[user]){
+      return true;
+    }
+  }
 }

@@ -25,7 +25,7 @@
         <th><a href="<%= "/urls/" + url %>">Edit</a></th>
         <!-- Delete button that will remove the particular url -->
         <th>
-          <form method="POST" action="<%= "/urls/" + url + "/delete" %>">
+          <form method="POST" action="<%= "/urls/" + url + "?_method=DELETE" %>">
             <input type="submit" value="Delete">
           </form>
         </th>

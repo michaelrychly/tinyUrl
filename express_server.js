@@ -1,9 +1,9 @@
   "use strict";
-  //parameters
   const express = require("express");
+  const methodOverride = require("method-override");
   const bodyParser = require("body-parser");
   const cookieSession = require("cookie-session");
-  const bcrypt = require('bcrypt');
+  const bcrypt = require("bcrypt");
 
   let app = express();
   let PORT = process.env.PORT || 8080; // default port 8080
@@ -11,6 +11,9 @@
   //connecting to express
   app.set("view engine", "ejs");
   app.use(bodyParser.urlencoded({extended: true}));
+  //use method override (app.delete instead of app.post as delete)
+  app.use(methodOverride("_method"));
+
   app.use(cookieSession({
     name: 'session',
     keys: ['user_id']
@@ -167,7 +170,7 @@
     }
   });
 
-  app.post("/urls/:id/delete", (req, res) => {
+  app.delete("/urls/:id", (req, res) => {
     if (!req.session.user_id){
       res.end("<html><body>You are not logged in. You are not allowed to delete data. </body></html>\n");
     } else {
@@ -179,7 +182,7 @@
     }
   });
 
-  app.post("/urls/:id", (req, res) => {
+  app.put("/urls/:id", (req, res) => {
 
     //update the url to the url database
     urlDatabase[req.params.id].longURL = req.body.longURL;

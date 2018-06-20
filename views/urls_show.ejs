@@ -21,7 +21,8 @@
       <tr>
         <th>
           <!-- present the short url -->
-          <form method="POST" action="<%= "/urls/" + shortURL %>">
+          <form method="POST" action="<%= "/urls/" + shortURL
+            + "?_method=PUT" %>">
             <label for="longURL">Enter a URL:</label>
             <!-- input field for updating the long url -->
             <input id="longURL" type="text" name="longURL" placeholder="<%= urls[shortURL].longURL %>" style="width: 300px">

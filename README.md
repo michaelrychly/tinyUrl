@@ -25,7 +25,4 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## Room for improvement
 
-- when the user does not log out and the server is restarted, all added users will be gone
-- this leads to unwanted behaviour currently in which the user can't reach neither the login nor the register page
-- solution is to delete the session when the user cannot be found in the user object
-- this solution is currently pending
+- 

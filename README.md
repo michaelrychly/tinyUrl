@@ -3,9 +3,9 @@
 TinyApp is a full stack web application built with Node and Express that allows users to shorten URLs (á la bit.ly).
 
 ## Final Product
-!["URL overview"](https://github.com/michaelrychly/express/blob/master/docs/OverviewURL.png?raw=true)
-!["URL add"](https://github.com/michaelrychly/express/blob/master/docs/AddURL.png?raw=true)
-!["URL update"](https://github.com/michaelrychly/express/blob/master/docs/UpdateURL.png?raw=true)
+!["URL overview"](https://github.com/michaelrychly/tinyUrl/blob/master/docs/OverviewURL.png?raw=true)
+!["URL add"](https://github.com/michaelrychly/tinyUrl/blob/master/docs/AddURL.png?raw=true)
+!["URL update"](https://github.com/michaelrychly/tinyUrl/blob/master/docs/UpdateURL.png?raw=true)
 
 ## Dependencies
 
@@ -25,7 +25,4 @@ TinyApp is a full stack web application built with Node and Express that allows 
 
 ## Room for improvement
 
-- when the user does not log out and the server is restarted, all added users will be gone
-- this leads to unwanted behaviour currently in which the user can't reach neither the login nor the register page
-- solution is to delete the session when the user cannot be found in the user object
-- this solution is currently pending
+- Chrome will cache redirects and this will sometimes lead to situations where the user can't go to the login page. In this case navigate to 'More Tools' -> 'Clear browsing data' and delete the last hour. 

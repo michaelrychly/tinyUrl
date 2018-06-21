@@ -23,11 +23,17 @@
   let urlDatabase = {
     "b2xVn2": {
       userID: "userRandomID",
-      longURL: "http://www.lighthouselabs.ca"
+      longURL: "http://www.lighthouselabs.ca",
+      count: 0,
+      unique: 0,
+      visit: []
     },
     "9sm5xK": {
       userID: "user2RandomID",
-      longURL: "http://www.google.com"
+      longURL: "http://www.google.com",
+      count: 0,
+      unique: 0,
+      visit: []
     }
   };
 
@@ -75,6 +81,28 @@
     for (let url in urlDatabase){
       if (req.params.shortURL === url){
         longURL = urlDatabase[url].longURL;
+        //increase count to see how often the shortURL has been visited
+        urlDatabase[url].count++;
+
+        let visited = false;
+        //check if the user has visited that shortURL before
+        for (let i = 0; i < urlDatabase[url].visit.length; i++) {
+          //check if current user has visited the shortURL
+          if (urlDatabase[url].visit[i].id === req.session.user_id){
+            visited = true;
+          }
+        }
+
+        //if current session user has not visited increase count and add
+        //as new visitor
+        if (!visited) {
+          let visitor = {
+            id: req.session.user_id,
+            time: Date.now()
+          }
+          urlDatabase[url].visit.push(visitor);
+          urlDatabase[url].unique++;
+        }
       }
     }
 
@@ -161,7 +189,10 @@
       let shortURL = generateRandomString();
       let url = {
         userID: req.session.user_id,
-        longURL: req.body.longURL
+        longURL: req.body.longURL,
+        count: 0,
+        unique: 0,
+        visit: []
       }
 
       urlDatabase[shortURL] = url;

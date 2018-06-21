@@ -2,29 +2,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title></title>
+  <title>Register</title>
   <style>
     th {text-align: left;}
   </style>
 </head>
 <body>
-    <!-- present table with email and password details -->
-    <table style="width:50%">
-      <tr>
-        <th>
-          <!-- input forms -->
-          <form method="POST" action="/register">
-            <label for="email">Enter an E-mail:</label>
-            <!-- input field for updating the email -->
-            <input id="email" type="email" name="email" placeholder="E-mail" style="width: 200px">
-            <label for="password">Enter a password:</label>
-            <!-- input field for updating the password -->
-            <input id="password" type="password" name="password" placeholder="Password" style="width: 200px">
-            <!-- register button -->
-            <input type="submit" value="Register">
-          </form>
-        </th>
-      </tr>
-    </table>
+  <!-- links to login and register -->
+    <a href="/register">Register</a>
+    <a href="/login">Login</a>
+  <!-- present table with email and password details -->
+  <table style="width:50%">
+    <tr>
+      <th>
+        <!-- input forms -->
+        <form method="POST" action="/register">
+          <label for="email">Enter an E-mail:</label>
+          <!-- input field for updating the email -->
+          <input id="email" type="email" name="email" placeholder="E-mail" style="width: 200px">
+          <label for="password">Enter a password:</label>
+          <!-- input field for updating the password -->
+          <input id="password" type="password" name="password" placeholder="Password" style="width: 200px">
+          <!-- register button -->
+          <input type="submit" value="Register">
+        </form>
+      </th>
+    </tr>
+  </table>
 </body>
 </html>

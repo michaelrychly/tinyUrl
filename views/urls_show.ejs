@@ -2,9 +2,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title></title>
+  <title>Edit</title>
   <style>
-    th {text-align: left;}
+    th {text-align: left}
   </style>
 </head>
 <body>
@@ -31,6 +31,40 @@
           </form>
         </th>
       </tr>
+      <tr>
+        <td>
+          <label>Total visits:</label>
+        </td>
+        <td>
+          <label><%= urls[shortURL].count %></label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label>Unique visits:</label>
+        </td>
+        <td>
+          <label><%= urls[shortURL].unique %></label>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label>Unique visitors ID</label>
+        </td>
+        <td>
+          <label>Timestamp</label>
+        </td>
+      </tr>
+      <% for(let i = 0; i < urls[shortURL].visit.length; i++) { %>
+      <tr>
+        <td>
+          <label><%= urls[shortURL].visit[i].id %></label>
+        </td>
+        <td>
+          <label><%= urls[shortURL].visit[i].time %></label>
+        </td>
+      </tr>
+      <% } %>
     </table>
     <% } else { %>
       <h3>You can only see the urls that you have registered.</h3>
